@@ -11,6 +11,7 @@ public class Tour {
 	String tourID;
 	String tourName;
 	String imageMainURL;
+	String tourAccess;
 	LinkedList<String> imageURLs = new LinkedList<String>();
 	LinkedList<Point> geoLoc = new LinkedList<Point>();
 
@@ -18,20 +19,23 @@ public class Tour {
 		tourID = null;
 		tourName = null;
 		imageMainURL = null;
-		LinkedList<String> imageURLs = null;
-		LinkedList<Point> geoLoc = null;
+		tourAccess = null;
+		imageURLs = null;
+		geoLoc = null;
 	}
 	
-	public Tour(String tID, String tName, String tImageMainURL){
+	public Tour(String tID, String tName, String tImageMainURL, String tAccess){
 		tourID = tID;
 		tourName = tName;
 		imageMainURL = tImageMainURL;
+		tourAccess = tAccess;
 	}
 	
-	public Tour(String tID, String tName, String tImageMainURL, LinkedList<String> tImageURLs, LinkedList<Point> tLocations){
+	public Tour(String tID, String tName, String tImageMainURL, String tAccess, LinkedList<String> tImageURLs, LinkedList<Point> tLocations){
 		tourID = tID;
 		tourName = tName;
 		imageMainURL = tImageMainURL;
+		tourAccess = tAccess;
 		imageURLs = tImageURLs;
 		geoLoc = tLocations;
 	}
@@ -58,6 +62,14 @@ public class Tour {
 
 	public void setImageMainURL(String imageMainURL) {
 		this.imageMainURL = imageMainURL;
+	}
+	
+	public String getTourAccess() {
+		return tourAccess;
+	}
+
+	public void setTourAccess(String tourAccess) {
+		this.tourAccess = tourAccess;
 	}
 
 	public LinkedList<String> getImageURLs() {
