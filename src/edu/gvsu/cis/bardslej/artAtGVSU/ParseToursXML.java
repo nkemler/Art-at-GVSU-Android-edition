@@ -13,7 +13,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-
+/*
+ * Class responsible of Parsing Tour information and the artwork in each tour.
+ */
 public class ParseToursXML {
 	
 	static LinkedList<Tour> tours = new LinkedList<Tour>(); 
@@ -46,8 +48,8 @@ public class ParseToursXML {
 	 */
 	private static GeoPoint createPoint(String geoLocation){
 		//TODO String manipulation of geoLocation not working. Must take out [42.967222,-85.8875] and put each double into the lat and long
-		//String lat = geoLocation.substring(geoLocation.indexOf("["),geoLocation.indexOf(","));
-		//String lon = geoLocation.substring(lat.indexOf(","),lat.indexOf("]"));
+		String lat = geoLocation.substring(geoLocation.indexOf("["),geoLocation.indexOf(","));
+		String lon = geoLocation.substring(lat.indexOf(","),lat.indexOf("]"));
 		//double latitude = Double.valueOf(lat.trim()).doubleValue();
 		//double longnitude = Double.valueOf(lon.trim()).doubleValue();
 		
@@ -56,6 +58,15 @@ public class ParseToursXML {
 		double longnitude = 10.0;
 		GeoPoint p = new GeoPoint(latitude,longnitude);
 		return p;
+	}
+	
+	/*
+	 * After selecting a specific tour the artwork in the tour will be added to the tour
+	 */
+	private static void addArtWorkToTour(LinkedList<ArtWork> artWork, String tourID){
+		Tour t = tours.get(Integer.valueOf(tourID) - 1);
+		t.setArtPieces(artWork);
+		tours.set(Integer.valueOf(tourID) - 1, t);
 	}
 	
 	/*
@@ -86,7 +97,7 @@ public class ParseToursXML {
 				tours.add(t);
 			}
 		} catch (SAXException e) {
-			// TODO Auto-generated cathch block
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -115,7 +126,7 @@ public class ParseToursXML {
 			Element docElement = doc.getDocumentElement();
 			NodeList relNode = docElement.getChildNodes();
 			NodeList toursArtPieceList = relNode.item(0).getChildNodes();
-			int toursArtPieceCount = toursArtPieceList.getLength();
+			int toursArtPieceCount = toursArtPieceList.getLength() - 1;
 			
 			for(int i = 0; i < toursArtPieceCount; i++){
 				Element artPiece = (Element) toursArtPieceList.item(i);
@@ -124,15 +135,14 @@ public class ParseToursXML {
 				String aName = artDetails.item(3).getTextContent();
 				String aID = artDetails.item(11).getTextContent();
 				String geoLocation = artDetails.item(10).getTextContent();
-				String aImageUrl = null;
 				
 				//set up point for geoLocation
 				GeoPoint aGeoLoc = createPoint(geoLocation);
-				ArtWork aPiece = new ArtWork(aGeoLoc, aName, aID, aStopID, aImageUrl);
+				ArtWork aPiece = new ArtWork(aGeoLoc, aName, aID, aStopID);
 				art.add(aPiece);
 			}
 		} catch (SAXException e) {
-			// TODO Auto-generated cathch block
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -141,16 +151,8 @@ public class ParseToursXML {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	/*
-	 * Builds the URL to send and parses the XML for the specific tour images.
-	 */
-	public static void toursIndividualImagesRequest(String requestedTourNum){
-		//Add tour number to the URL
-		//String url = "http://gvsuartgallery.org/service.php/iteminfo/ItemInfo/rest?method=get&type=ca_objects&%@bundles[0]=ca_objects.object_id&bundles[1]=ca_objects.access&bundles[2]=ca_object_representations.media.icon&options[ca_object_representations.media.icon][returnURL]=1";
-		//url.replace("%d", requestedTourNum);
-		//InputStream in = makeConnection(url);
 		
+		//Add artwork in tour to the selected tour
+		addArtWorkToTour(art, requestedTourNum);
 	}
 }

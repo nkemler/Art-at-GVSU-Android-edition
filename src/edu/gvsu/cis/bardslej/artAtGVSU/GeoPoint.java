@@ -1,12 +1,15 @@
 package edu.gvsu.cis.bardslej.artAtGVSU;
 
+/*
+ * Class to hold a point with 
+ */
 public class GeoPoint {
 
-	double la;
-	double lo;
+	double latitude;
+	double longnitude;
 	
 	public GeoPoint(double lat, double lon){
-		la = lat;
-		lo = lon;
+		latitude = lat;
+		longnitude = lon;
 	}
 }

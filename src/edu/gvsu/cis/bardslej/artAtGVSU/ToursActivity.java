@@ -20,8 +20,19 @@ public class ToursActivity extends Activity{
 			public void onClick(View view) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(view.getContext(), MapViewActivity.class);
-				LinkedList<Tour> tours = ParseToursXML.toursRequest();
+				
+				LinkedList<Tour> tours = new LinkedList<Tour>();
+				tours = ParseToursXML.toursRequest();
+				String tourSelected = "1"; 
 				ParseToursXML.toursIndividualDataRequest("1");
+				
+				Tour tSelected = tours.get(Integer.parseInt(tourSelected));
+				//Enough info in tour object to display everything except for the image icons
+				
+				//Must call each image as a search so that the artwork in each 
+				for(int i = 0; i < tSelected.getArtPieces().size(); i++){
+					ParseArtWorkXML.artWorkTourRequest();
+				}
                 startActivityForResult(intent, 0);    
 			}
 		});

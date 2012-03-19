@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.LinkedList;
 
 public class ParseArtWorkXML {
 	/*
@@ -28,10 +29,10 @@ public class ParseArtWorkXML {
 		return in;
 	}
 	
-	public static ArtWork artWorkRequest(){
+	public static LinkedList<ArtWork> artWorkTourRequest(){
 		InputStream in = makeConnection("http://gvsuartgallery.org/service.php/search/Search/rest?method=queryRest&type=ca_tours&query=*&additional_bundles[ca_tours.icon.largeicon][returnURL]=1&additional_bundles[ca_tours.access]");
-		ArtWork artPiece = new ArtWork();
+		LinkedList<ArtWork> artPieces = new LinkedList<ArtWork>();
 		
-		return artPiece; 
+		return artPieces; 
 	}
 }

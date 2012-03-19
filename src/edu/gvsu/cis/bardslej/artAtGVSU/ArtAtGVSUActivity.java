@@ -1,13 +1,5 @@
 package edu.gvsu.cis.bardslej.artAtGVSU;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-
-import org.w3c.dom.Document;
-
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
