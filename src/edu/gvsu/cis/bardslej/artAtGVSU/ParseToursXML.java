@@ -10,12 +10,14 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 
 public class ParseToursXML {
+	
+	static LinkedList<Tour> tours = new LinkedList<Tour>(); 
+	static LinkedList<ArtWork> art = new LinkedList<ArtWork>();
 	
 	/*
 	 * Make Connection with URL parameter (URL string can be concatenated with conditions when
@@ -27,7 +29,7 @@ public class ParseToursXML {
 		try{
 			urlSend = new URL(url);
 			HttpURLConnection connection = (HttpURLConnection) urlSend.openConnection();
-			connection.getInputStream();
+			//connection.getInputStream();
 			in = connection.getInputStream();
 		}catch(MalformedURLException e){
 			e.printStackTrace();
@@ -38,6 +40,23 @@ public class ParseToursXML {
 		return in;
 	}
 
+	/*
+	 * Sets up the point for the geo Location by parsing the XML String and putting the x and y 
+	 * double values into the point object. Returns the point created.
+	 */
+	private static GeoPoint createPoint(String geoLocation){
+		//TODO String manipulation of geoLocation not working. Must take out [42.967222,-85.8875] and put each double into the lat and long
+		//String lat = geoLocation.substring(geoLocation.indexOf("["),geoLocation.indexOf(","));
+		//String lon = geoLocation.substring(lat.indexOf(","),lat.indexOf("]"));
+		//double latitude = Double.valueOf(lat.trim()).doubleValue();
+		//double longnitude = Double.valueOf(lon.trim()).doubleValue();
+		
+		//temp to make it work
+		double latitude = 10.0;
+		double longnitude = 10.0;
+		GeoPoint p = new GeoPoint(latitude,longnitude);
+		return p;
+	}
 	
 	/*
 	 * Makes a connection with the tours request and parses the XML returned from the database
@@ -46,7 +65,6 @@ public class ParseToursXML {
 	public static LinkedList<Tour> toursRequest(){
 
 		InputStream in = makeConnection("http://gvsuartgallery.org/service.php/search/Search/rest?method=queryRest&type=ca_tours&query=*&additional_bundles[ca_tours.icon.largeicon][returnURL]=1&additional_bundles[ca_tours.access]");
-		LinkedList<Tour> tours = new LinkedList<Tour>(); 
 		
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -83,22 +101,56 @@ public class ParseToursXML {
 	/*
 	 * Builds the URL to send and parses the XML for the specific tour data.
 	 */
-	public static void toursIndividualDataRequest(int requestedTour){
+	public static void toursIndividualDataRequest(String requestedTourNum){
 		//Add tour number to the URL
-		StringBuilder url = new StringBuilder();
-		url.append(requestedTour);
-		InputStream in = makeConnection(url.toString());
-	
+		String url = "http://gvsuartgallery.org/service.php/iteminfo/ItemInfo/rest?method=getRelationships&type=ca_tours&item_id=%d&related_type=ca_tour_stops&options[bundles][ca_objects.georeference]=&options[bundles][ca_objects.object_id]=";
+		url = url.replace("%d", requestedTourNum);
+		InputStream in = makeConnection(url);
+		
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = factory.newDocumentBuilder();
+			Document doc = db.parse(in);
+			
+			Element docElement = doc.getDocumentElement();
+			NodeList relNode = docElement.getChildNodes();
+			NodeList toursArtPieceList = relNode.item(0).getChildNodes();
+			int toursArtPieceCount = toursArtPieceList.getLength();
+			
+			for(int i = 0; i < toursArtPieceCount; i++){
+				Element artPiece = (Element) toursArtPieceList.item(i);
+				NodeList artDetails = artPiece.getChildNodes();
+				String aStopID = artDetails.item(2).getTextContent();
+				String aName = artDetails.item(3).getTextContent();
+				String aID = artDetails.item(11).getTextContent();
+				String geoLocation = artDetails.item(10).getTextContent();
+				String aImageUrl = null;
+				
+				//set up point for geoLocation
+				GeoPoint aGeoLoc = createPoint(geoLocation);
+				ArtWork aPiece = new ArtWork(aGeoLoc, aName, aID, aStopID, aImageUrl);
+				art.add(aPiece);
+			}
+		} catch (SAXException e) {
+			// TODO Auto-generated cathch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/*
 	 * Builds the URL to send and parses the XML for the specific tour images.
 	 */
-	public static void toursIndividualImagesRequest(int requestedTour){
+	public static void toursIndividualImagesRequest(String requestedTourNum){
 		//Add tour number to the URL
-		StringBuilder url = new StringBuilder();
-		url.append(requestedTour);
-		InputStream in = makeConnection(url.toString());
-	
+		//String url = "http://gvsuartgallery.org/service.php/iteminfo/ItemInfo/rest?method=get&type=ca_objects&%@bundles[0]=ca_objects.object_id&bundles[1]=ca_objects.access&bundles[2]=ca_object_representations.media.icon&options[ca_object_representations.media.icon][returnURL]=1";
+		//url.replace("%d", requestedTourNum);
+		//InputStream in = makeConnection(url);
+		
 	}
 }

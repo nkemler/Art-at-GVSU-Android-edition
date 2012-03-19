@@ -1,7 +1,6 @@
 package edu.gvsu.cis.bardslej.artAtGVSU;
 
 import java.util.LinkedList;
-import android.graphics.Point;
 
 /*
  * Tour class creates a tour object that holds data and image URLs to pieces of art
@@ -12,16 +11,14 @@ public class Tour {
 	String tourName;
 	String imageMainURL;
 	String tourAccess;
-	LinkedList<String> imageURLs = new LinkedList<String>();
-	LinkedList<Point> geoLoc = new LinkedList<Point>();
+	LinkedList<ArtWork> artPieces = new LinkedList<ArtWork>();
 
 	public Tour(){
 		tourID = null;
 		tourName = null;
 		imageMainURL = null;
 		tourAccess = null;
-		imageURLs = null;
-		geoLoc = null;
+		artPieces = null;
 	}
 	
 	public Tour(String tID, String tName, String tImageMainURL, String tAccess){
@@ -29,15 +26,15 @@ public class Tour {
 		tourName = tName;
 		imageMainURL = tImageMainURL;
 		tourAccess = tAccess;
+		artPieces = null;
 	}
 	
-	public Tour(String tID, String tName, String tImageMainURL, String tAccess, LinkedList<String> tImageURLs, LinkedList<Point> tLocations){
+	public Tour(String tID, String tName, String tImageMainURL, String tAccess, LinkedList<ArtWork> aPieces){
 		tourID = tID;
 		tourName = tName;
 		imageMainURL = tImageMainURL;
 		tourAccess = tAccess;
-		imageURLs = tImageURLs;
-		geoLoc = tLocations;
+		artPieces = aPieces;
 	}
 
 	public String getTourID() {
@@ -72,21 +69,11 @@ public class Tour {
 		this.tourAccess = tourAccess;
 	}
 
-	public LinkedList<String> getImageURLs() {
-		return imageURLs;
+	public LinkedList<ArtWork> getArtPieces() {
+		return artPieces;
 	}
 
-	public void setImageURLs(LinkedList<String> imageURLs) {
-		this.imageURLs = imageURLs;
-	}
-
-	public LinkedList<Point> getGeoLoc() {
-		return geoLoc;
-	}
-
-	public void setGeoLoc(LinkedList<Point> geoLoc) {
-		this.geoLoc = geoLoc;
-	}
-
-	
+	public void setArtPieces(LinkedList<ArtWork> artPieces) {
+		this.artPieces = artPieces;
+	}	
 }
