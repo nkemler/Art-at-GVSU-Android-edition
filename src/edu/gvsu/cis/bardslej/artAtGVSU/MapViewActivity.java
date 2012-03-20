@@ -50,18 +50,20 @@ public class MapViewActivity extends MapActivity {
 		map.displayZoomControls(true);
 		map.setBuiltInZoomControls(true);
 		
-		TouchOverlay tOverlay = new TouchOverlay();
+		PointOverlay pointOverlay = new PointOverlay();
 		overlayList = map.getOverlays();
-		overlayList.add(tOverlay);
+		overlayList.add(pointOverlay);		
 		
-		points = new MyLocationOverlay(MapViewActivity.this, map);
-		overlayList.add(points);
-		controller = map.getController();
-		points.enableCompass();
-		GeoPoint point = new GeoPoint(11643234, 1848593);
-		controller.animateTo(point);
-		controller.setZoom(10);
-		d = getResources().getDrawable(R.drawable.pin);
+		//d = getResources().getDrawable(R.drawable.pin);
+		//Tour t = ParseToursXML.getTour("1");
+		//controller.animateTo(t.artPieces.get(1).geoLoc);
+		//for(int i = 0; i < t.artPieces.size(); i++){
+		//	OverlayItem overlayItem = new OverlayItem(t.artPieces.get(i).geoLoc, t.artPieces.get(i).artTitle, null);
+		//	TourPinpoints custom = new TourPinpoints(d, MapViewActivity.this);
+		//	custom.createPinPoint(overlayItem);
+		//	overlayList.add(custom);
+		//}
+		//controller.setZoom(10);
 		
 		Button mapButton = (Button) findViewById(R.id.backButton);
 		mapButton.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +81,7 @@ public class MapViewActivity extends MapActivity {
 		return false;
 	}
 	
-	class TouchOverlay extends Overlay{
+	class PointOverlay extends Overlay{
 		public boolean onTouchEvent(MotionEvent e, MapView m){
 			if(e.getAction() == MotionEvent.ACTION_DOWN){
 				start = e.getEventTime();
@@ -99,11 +101,15 @@ public class MapViewActivity extends MapActivity {
 					
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO Auto-generated method stub
-						
-						OverlayItem overlayItem = new OverlayItem(geoP, "What's up", "2nd String");
-						TourPinpoints custom = new TourPinpoints(d, MapViewActivity.this);
-						custom.createPinPoint(overlayItem);
-						overlayList.add(custom);
+						d = getResources().getDrawable(R.drawable.pin);
+						Tour t = ParseToursXML.getTour("1");
+						//controller.animateTo(t.artPieces.get(1).geoLoc);
+						for(int i = 0; i < t.artPieces.size(); i++){
+							OverlayItem overlayItem = new OverlayItem(t.artPieces.get(i).geoLoc, t.artPieces.get(i).artTitle, null);
+							TourPinpoints custom = new TourPinpoints(d, MapViewActivity.this);
+							custom.createPinPoint(overlayItem);
+							overlayList.add(custom);
+						}
 					}
 				});
 				alert.setButton2("get address", new DialogInterface.OnClickListener() {
@@ -140,7 +146,6 @@ public class MapViewActivity extends MapActivity {
 				alert.show();
 				return true;
 			}
-			
 			return false;
 		}
 	}

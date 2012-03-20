@@ -1,5 +1,7 @@
 package edu.gvsu.cis.bardslej.artAtGVSU;
 
+import java.util.ArrayList;
+
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -10,15 +12,26 @@ public class ArtAtGVSUActivity extends TabActivity{
     
 	private TabHost mTabHost;
 	
+	//Gets enough information in tour object to display everything except for the image icons
+	private void retrieveTourInformation(){
+		ArrayList<Tour> tours = new ArrayList<Tour>();
+		tours = ParseToursXML.toursRequest();
+		
+		//Get minimal data of each artwork stops for each tour
+		for(int i = 0; i < tours.size(); i++){
+			ParseToursXML.toursIndividualDataRequest(tours.get(i).tourID);
+		}
+	}
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        //Make call to tours so that information is recieved
-        
-        
+        //Make call to tours so that information is recieved when app first opens 
+		retrieveTourInformation();
+		
         Resources res = getResources();
         mTabHost = getTabHost();
         TabHost.TabSpec spec;

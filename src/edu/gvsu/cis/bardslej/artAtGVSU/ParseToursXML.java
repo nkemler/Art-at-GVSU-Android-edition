@@ -2,6 +2,7 @@ package edu.gvsu.cis.bardslej.artAtGVSU;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,7 +21,7 @@ import com.google.android.maps.GeoPoint;
  */
 public class ParseToursXML {
 	
-	static LinkedList<Tour> tours = new LinkedList<Tour>(); 
+	static ArrayList<Tour> tours = new ArrayList<Tour>();
 	/*
 	 * Make Connection with URL parameter (URL string can be concatenated with conditions when
 	 * passed into the method) returns the inputStream from the response.   
@@ -63,7 +64,7 @@ public class ParseToursXML {
 	/*
 	 * After selecting a specific tour the artwork in the tour will be added to the tour
 	 */
-	private static void addArtWorkToTour(LinkedList<ArtWork> artWork, String tourID){
+	private static void addArtWorkToTour(ArrayList<ArtWork> artWork, String tourID){
 		Tour t = tours.get(Integer.valueOf(tourID) - 1);
 		t.setArtPieces(artWork);
 		tours.set(Integer.valueOf(tourID) - 1, t);
@@ -73,7 +74,7 @@ public class ParseToursXML {
 	 * Makes a connection with the tours request and parses the XML returned from the database
 	 * This request returns information about the Tours in general not about each specific tour.
 	 */
-	public static LinkedList<Tour> toursRequest(){
+	public static ArrayList<Tour> toursRequest(){
 
 		InputStream in = makeConnection("http://gvsuartgallery.org/service.php/search/Search/rest?method=queryRest&type=ca_tours&query=*&additional_bundles[ca_tours.icon.largeicon][returnURL]=1&additional_bundles[ca_tours.access]");
 
@@ -117,7 +118,7 @@ public class ParseToursXML {
 		String url = "http://gvsuartgallery.org/service.php/iteminfo/ItemInfo/rest?method=getRelationships&type=ca_tours&item_id=%d&related_type=ca_tour_stops&options[bundles][ca_objects.georeference]=&options[bundles][ca_objects.object_id]=";
 		url = url.replace("%d", requestedTourNum);
 		InputStream in = makeConnection(url);
-		LinkedList<ArtWork> art = new LinkedList<ArtWork>();
+		ArrayList<ArtWork> art = new ArrayList<ArtWork>();
 		
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -161,7 +162,11 @@ public class ParseToursXML {
 	}
 	
 	//Get the tours Linked List
-	public static LinkedList<Tour> getTours() {
+	public static ArrayList<Tour> getTours() {
 		return tours;
+	}
+	
+	public static Tour getTour(String tID){
+		return tours.get(Integer.valueOf(tID) - 1);
 	}
 }

@@ -1,5 +1,6 @@
 package edu.gvsu.cis.bardslej.artAtGVSU;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /*
@@ -11,7 +12,7 @@ public class Tour {
 	String tourName;
 	String imageMainURL;
 	String tourAccess;
-	LinkedList<ArtWork> artPieces = new LinkedList<ArtWork>();
+	ArrayList<ArtWork> artPieces = new ArrayList<ArtWork>();
 
 	public Tour(){
 		tourID = null;
@@ -29,7 +30,7 @@ public class Tour {
 		artPieces = null;
 	}
 	
-	public Tour(String tID, String tName, String tImageMainURL, String tAccess, LinkedList<ArtWork> aPieces){
+	public Tour(String tID, String tName, String tImageMainURL, String tAccess, ArrayList<ArtWork> aPieces){
 		tourID = tID;
 		tourName = tName;
 		imageMainURL = tImageMainURL;
@@ -69,11 +70,11 @@ public class Tour {
 		this.tourAccess = tourAccess;
 	}
 
-	public LinkedList<ArtWork> getArtPieces() {
+	public ArrayList<ArtWork> getArtPieces() {
 		return artPieces;
 	}
 
-	public void setArtPieces(LinkedList<ArtWork> artPieces) {
+	public void setArtPieces(ArrayList<ArtWork> artPieces) {
 		this.artPieces = artPieces;
 	}	
 }
