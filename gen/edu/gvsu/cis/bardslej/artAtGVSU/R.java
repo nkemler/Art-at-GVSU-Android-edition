@@ -20,8 +20,9 @@ public final class R {
         public static final int header_home=0x7f020006;
         public static final int ic_launcher=0x7f020007;
         public static final int magnify=0x7f020008;
-        public static final int tours_icon=0x7f020009;
-        public static final int welcome=0x7f02000a;
+        public static final int pin=0x7f020009;
+        public static final int tours_icon=0x7f02000a;
+        public static final int welcome=0x7f02000b;
     }
     public static final class id {
         public static final int ImageButton2=0x7f050007;

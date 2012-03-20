@@ -10,10 +10,22 @@ import android.widget.ImageButton;
 
 public class ToursActivity extends Activity{
 	
+	//Gets enough information in tour object to display everything except for the image icons
+	private LinkedList<Tour> retrieveTourInformation(){
+		LinkedList<Tour> tours = new LinkedList<Tour>();
+		tours = ParseToursXML.toursRequest();
+		
+		//Get minimal data of each artwork stops for each tour
+		for(int i = 0; i < tours.size(); i++){
+			ParseToursXML.toursIndividualDataRequest(tours.get(i).tourID);
+		}
+		
+		return ParseToursXML.getTours();
+	}
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.tours_layout);
+		setContentView(R.layout.tours_layout);		
 		
 		ImageButton mapButton1 = (ImageButton) findViewById(R.id.imageButton1);
 		mapButton1.setOnClickListener(new View.OnClickListener() {
@@ -21,18 +33,11 @@ public class ToursActivity extends Activity{
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(view.getContext(), MapViewActivity.class);
 				
-				LinkedList<Tour> tours = new LinkedList<Tour>();
-				tours = ParseToursXML.toursRequest();
-				String tourSelected = "1"; 
-				ParseToursXML.toursIndividualDataRequest("1");
-				
-				Tour tSelected = tours.get(Integer.parseInt(tourSelected));
-				//Enough info in tour object to display everything except for the image icons
-				
-				//Must call each image as a search so that the artwork in each 
-				for(int i = 0; i < tSelected.getArtPieces().size(); i++){
-					ParseArtWorkXML.artWorkTourRequest();
-				}
+				LinkedList<Tour> t = retrieveTourInformation();
+				//Must call each image as a search so that the artwork in each  
+				//for(int i = 0; i < tSelected.getArtPieces().size(); i++){
+					//ParseArtWorkXML.artWorkRequestID(tSelected.getArtPieces().get(i).artID);
+				//}
                 startActivityForResult(intent, 0);    
 			}
 		});

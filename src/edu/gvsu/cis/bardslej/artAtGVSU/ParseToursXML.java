@@ -13,14 +13,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.google.android.maps.GeoPoint;
+
 /*
  * Class responsible of Parsing Tour information and the artwork in each tour.
  */
 public class ParseToursXML {
 	
 	static LinkedList<Tour> tours = new LinkedList<Tour>(); 
-	static LinkedList<ArtWork> art = new LinkedList<ArtWork>();
-	
 	/*
 	 * Make Connection with URL parameter (URL string can be concatenated with conditions when
 	 * passed into the method) returns the inputStream from the response.   
@@ -31,7 +31,6 @@ public class ParseToursXML {
 		try{
 			urlSend = new URL(url);
 			HttpURLConnection connection = (HttpURLConnection) urlSend.openConnection();
-			//connection.getInputStream();
 			in = connection.getInputStream();
 		}catch(MalformedURLException e){
 			e.printStackTrace();
@@ -43,20 +42,21 @@ public class ParseToursXML {
 	}
 
 	/*
-	 * Sets up the point for the geo Location by parsing the XML String and putting the x and y 
-	 * double values into the point object. Returns the point created.
+	 * Sets up the point for the geo Location by parsing the XML String and putting the lat and lon
+	 * int values into the GeoPoint object. Returns the GeoPoint created.
 	 */
 	private static GeoPoint createPoint(String geoLocation){
-		//TODO String manipulation of geoLocation not working. Must take out [42.967222,-85.8875] and put each double into the lat and long
-		String lat = geoLocation.substring(geoLocation.indexOf("["),geoLocation.indexOf(","));
-		String lon = geoLocation.substring(lat.indexOf(","),lat.indexOf("]"));
-		//double latitude = Double.valueOf(lat.trim()).doubleValue();
-		//double longnitude = Double.valueOf(lon.trim()).doubleValue();
-		
-		//temp to make it work
-		double latitude = 10.0;
-		double longnitude = 10.0;
-		GeoPoint p = new GeoPoint(latitude,longnitude);
+		String loc = geoLocation;
+		int startTrim = loc.indexOf("[") + 1;
+		String gLoc = loc.substring(startTrim);
+		String lat = gLoc.substring(0 ,gLoc.indexOf(","));
+		String lon = gLoc.substring(gLoc.indexOf(",") + 1, gLoc.indexOf("]"));
+		double latitude = Double.valueOf(lat.trim()).doubleValue();
+		double longitude = Double.valueOf(lon.trim()).doubleValue();
+
+		int iLat = (int) (latitude * 1E6);
+		int iLon = (int) (longitude * 1E6);
+		GeoPoint p = new GeoPoint(iLat, iLon);
 		return p;
 	}
 	
@@ -76,7 +76,7 @@ public class ParseToursXML {
 	public static LinkedList<Tour> toursRequest(){
 
 		InputStream in = makeConnection("http://gvsuartgallery.org/service.php/search/Search/rest?method=queryRest&type=ca_tours&query=*&additional_bundles[ca_tours.icon.largeicon][returnURL]=1&additional_bundles[ca_tours.access]");
-		
+
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = factory.newDocumentBuilder();
@@ -117,6 +117,7 @@ public class ParseToursXML {
 		String url = "http://gvsuartgallery.org/service.php/iteminfo/ItemInfo/rest?method=getRelationships&type=ca_tours&item_id=%d&related_type=ca_tour_stops&options[bundles][ca_objects.georeference]=&options[bundles][ca_objects.object_id]=";
 		url = url.replace("%d", requestedTourNum);
 		InputStream in = makeConnection(url);
+		LinkedList<ArtWork> art = new LinkedList<ArtWork>();
 		
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -126,6 +127,7 @@ public class ParseToursXML {
 			Element docElement = doc.getDocumentElement();
 			NodeList relNode = docElement.getChildNodes();
 			NodeList toursArtPieceList = relNode.item(0).getChildNodes();
+			// Minus 1 accounts for success node in XML document
 			int toursArtPieceCount = toursArtPieceList.getLength() - 1;
 			
 			for(int i = 0; i < toursArtPieceCount; i++){
@@ -136,10 +138,12 @@ public class ParseToursXML {
 				String aID = artDetails.item(11).getTextContent();
 				String geoLocation = artDetails.item(10).getTextContent();
 				
-				//set up point for geoLocation
-				GeoPoint aGeoLoc = createPoint(geoLocation);
-				ArtWork aPiece = new ArtWork(aGeoLoc, aName, aID, aStopID);
-				art.add(aPiece);
+				if(!geoLocation.isEmpty() || !aID.isEmpty()){
+					//set up point for geoLocation
+					GeoPoint aGeoLoc = createPoint(geoLocation);
+					ArtWork aPiece = new ArtWork(aGeoLoc, aName, aID, aStopID);
+					art.add(aPiece);
+				}
 			}
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
@@ -154,5 +158,10 @@ public class ParseToursXML {
 		
 		//Add artwork in tour to the selected tour
 		addArtWorkToTour(art, requestedTourNum);
+	}
+	
+	//Get the tours Linked List
+	public static LinkedList<Tour> getTours() {
+		return tours;
 	}
 }

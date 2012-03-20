@@ -1,5 +1,7 @@
 package edu.gvsu.cis.bardslej.artAtGVSU;
 
+import com.google.android.maps.GeoPoint;
+
 /*
  * Class for a piece of artWork and its detials
  */

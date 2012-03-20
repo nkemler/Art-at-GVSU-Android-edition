@@ -16,6 +16,8 @@ public class ArtAtGVSUActivity extends TabActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        //Make call to tours so that information is recieved
+        
         
         Resources res = getResources();
         mTabHost = getTabHost();
