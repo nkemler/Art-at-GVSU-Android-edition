@@ -169,4 +169,6 @@ public class ParseToursXML {
 	public static Tour getTour(String tID){
 		return tours.get(Integer.valueOf(tID) - 1);
 	}
+	
+	
 }

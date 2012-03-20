@@ -2,6 +2,7 @@ package edu.gvsu.cis.bardslej.artAtGVSU;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
@@ -34,6 +35,16 @@ public class TourPinpoints extends ItemizedOverlay<OverlayItem> {
 	public int size() {
 		// TODO Auto-generated method stub
 		return pinPoints.size();
+	}
+	
+	@Override
+	protected boolean onTap(int index) {
+	  OverlayItem item = pinPoints.get(index);
+	  AlertDialog.Builder dialog = new AlertDialog.Builder(c);
+	  dialog.setTitle(item.getTitle());
+	  dialog.setMessage(item.getSnippet());
+	  dialog.show();
+	  return true;
 	}
 	
 	public void createPinPoint(OverlayItem item){

@@ -66,7 +66,7 @@ public class ToursActivity extends Activity{
 					//ParseArtWorkXML.artWorkRequestID(tSelected.getArtPieces().get(i).artID);
 				//}
 				
-                startActivityForResult(intent, 0);    
+                startActivityForResult(intent, 0);
 			}
 		});
 		
