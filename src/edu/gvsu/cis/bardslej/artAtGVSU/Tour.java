@@ -63,7 +63,7 @@ public class Tour {
 	}
 	
 	public String getTourAccess() {
-		return tourAccess;
+		//return tourAccess;
 	}
 
 	public void setTourAccess(String tourAccess) {
